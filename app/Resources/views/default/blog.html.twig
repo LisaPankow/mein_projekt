@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% for eintrag in eintr %}
+
+        <div class="blog-post">
+            <h2 class="blog-post-title">{{ eintrag.ueberschrift }}</h2>
+            <p class="blog-post-meta">
+                {{ eintrag.datum|date('F j, Y g:i') }}
+            </p>
+            
+            <p>{{ eintrag.kategorie }}
+
+            </p> 
+            
+            {#{% if eintrag.kategorie is not empty %}
+                <p class="blog-post-meta">
+                    {{ eintrag.kategorie }}
+                </p>
+            {% endif %}#}
+
+            <p>{{ eintrag.text }}
+
+            </p>       
+            <a class="btn" href="{{path('bearbeiten',{'id':eintrag.id})}}">bearbeiten</a>   
+            <a class="btn" href="{{path('loeschen',{'id':eintrag.id})}}">löschen</a>                           
+
+            </br></br>
+        </p>
+    </div>
+    <!-- /.blog-post -->
+
+{% endfor %}
+
+
+
+<div class="blog-post">
+
+    {{ include('./spruch.html.twig') }}
+
+</div>
+<!-- /.blog-post -->
+
+
+<nav>
+    <ul class="pager">
+        <li><a href="#">Vorherige</a></li>
+        <li><a href="#">Nächste</a></li>
+    </ul>
+</nav>
+
+
+
+{% endblock %}
