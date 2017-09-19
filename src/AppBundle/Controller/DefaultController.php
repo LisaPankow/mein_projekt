@@ -18,15 +18,28 @@ use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\Eintrag;
 
 class DefaultController extends Controller {
-    
-    public $kategorien=[
-                        'Allgemein' => 'Allgemein',
-                        'Arbeit' => 'Arbeit',
-                        'Gesundheit' => 'Gesundheit',
-                        'Freunde' => 'Freunde',
-                        'Familie' => 'Familie',
-                        'Interessen' => 'Interessen'
-                    ];
+
+    public $kategorien = [
+        'Allgemein' => 'Allgemein',
+        'Arbeit' => 'Arbeit',
+        'Gesundheit' => 'Gesundheit',
+        'Freunde' => 'Freunde',
+        'Familie' => 'Familie',
+        'Interessen' => 'Interessen'
+    ];
+    public $monate = [
+        1 => "Januar",
+        2 => "Februar",
+        3 => "März",
+        4 => "April",
+        5 => "Mai",
+        6 => "Juni",
+        7 => "Juli",
+        8 => "August",
+        9 => "September",
+        10 => "Oktober",
+        11 => "November",
+        12 => "Dezember"];
 
     /**
      * @Route("/", name="homepage")
@@ -36,16 +49,26 @@ class DefaultController extends Controller {
     }
 
     /**
-     * @Route("/blog", name="blog")
+     * @Route("/blog/{year}/{month}", name="blog")
      */
-    public function blogAction() {
+    public function blogAction($year = 1700, $month = "Hanswurst") {
+        $jahr_akt = date("Y");
+        $mon_akt = date("F");
+        if ($year == 1700)
+            $year = $jahr_akt;
+        if ($month == "Hanswurst")
+            $month = $mon_akt;
         $eintr = $this->getDoctrine()
                 ->getRepository('AppBundle\Entity\Eintrag')
                 ->findAll();
+//                ->findBy($criteria)
         $eintr = array_reverse($eintr);
 
         return $this->render('default/blog.html.twig', array(
-                    'eintr' => $eintr
+                    'eintr' => $eintr,
+                    'year' => $year,
+                    'month' => $month,
+                    'monate' => $this->monate
         ));
     }
 
@@ -91,6 +114,7 @@ class DefaultController extends Controller {
             $eintrag->setUeberschrift($ueberschrift);
             $eintrag->setKategorie($kategorie);
             $eintrag->setText($text);
+            $eintrag->setDatum(date('Y-m-d H:i:s'));
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($eintrag);
@@ -103,17 +127,6 @@ class DefaultController extends Controller {
         return $this->render('default/neu.html.twig', array(
                     'form' => $form->createView()
         ));
-    }
-
-    /**
-     * @Route("/bootstrap", name="bootstrap")
-     */
-    public function bootstrapAction(Request $request) {
-        // replace this example code with whatever you need
-        // die('ich bin Test');
-        return $this->render('default/bootstrap.html.twig', [
-                    'base_dir' => realpath($this->getParameter('kernel.project_dir')) . DIRECTORY_SEPARATOR
-        ]);
     }
 
     /**
@@ -131,19 +144,19 @@ class DefaultController extends Controller {
                         'style' => 'margin-bottom:1.5em; width:90%'
                     )
                 ))
-                ->add('kategorie', ChoiceType::class, [
-                    'choices' => $this->kategorien,
-                    'attr' => ['class' => 'form-control',
-                        'style' => 'margin-bottom:1.5em; width:90%']
-                        ]
-                )
                 ->add('text', TextareaType::class, array(
                     'attr' => array(
                         'class' => 'form-control',
                         'style' => 'margin-bottom:1.5em; width:90%'
                     )
                 ))
-                ->add('id', IntegerType::class, array(
+                ->add('kategorie', ChoiceType::class, [
+                    'choices' => $this->kategorien,
+                    'attr' => ['class' => 'form-control',
+                        'style' => 'margin-bottom:1.5em; width:90%']
+                        ]
+                )
+                ->add('datum', DateTimeType::class, array(
                     'attr' => array(
                         'class' => 'form-control',
                         'style' => 'margin-bottom:1.5em; width:90%',
@@ -163,18 +176,18 @@ class DefaultController extends Controller {
             $ueberschrift = $form['ueberschrift']->getData();
             $kategorie = $form['kategorie']->getData();
             $text = $form['text']->getData();
+            $datum =$form['datum']->getData();
 
             $eintr->setUeberschrift($ueberschrift);
             $eintr->setKategorie($kategorie);
             $eintr->setText($text);
+            $eintr->setDatum($datum);
 
             $em->persist($eintr);
             $em->flush();
 
-
             return $this->redirectToRoute('blog');
         }
-
 
         return $this->render('default/bearbeiten.html.twig', array(
                     'form' => $form->createView()
@@ -205,6 +218,16 @@ class DefaultController extends Controller {
         ]);
     }
 
+    /**
+     * @Route("/bootstrap", name="bootstrap")
+     */
+    public function bootstrapAction(Request $request) {
+        // replace this example code with whatever you need
+        // die('ich bin Test');
+        return $this->render('default/bootstrap.html.twig', [
+                    'base_dir' => realpath($this->getParameter('kernel.project_dir')) . DIRECTORY_SEPARATOR
+        ]);
+    }
     /**
      * @Route("/paramtest/{name}", name="paramtest")
      */

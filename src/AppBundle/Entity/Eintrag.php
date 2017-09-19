@@ -45,7 +45,7 @@ class Eintrag
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="datum", type="datetime", nullable=true )
+     * @ORM\Column(name="datum", type="datetime")
      */
     private $datum;
 

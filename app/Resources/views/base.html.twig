@@ -58,10 +58,13 @@
 
     <div class="container">
 
+        {% block header %}
+            
         <div class="blog-header">
-            <h1 class="blog-title">hier kommt der angezeigte Monat rein</h1>
+            <h1 class="blog-title">      </h1>
         </div>
 
+        {% endblock %}
 
         <div class="row">
 
@@ -75,28 +78,10 @@
             </div><!-- /.blog-main -->
 
             <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
-                <div class="sidebar-module sidebar-module-inset">
-                    <h4>Gedanke des Tages</h4>
-                    <p>Nach einem Sinnspruch-Generator suchen</p>
-                </div>
+                {% block sidebar %}
 
-                <div class="sidebar-module">
-                    <h4>Hier möchte ich nach Jahr und Monat filtern können</h4>
-                    <ol class="list-unstyled">
-                        <li><a href="#">März 2014</a></li>
-                        <li><a href="#">Februar 2014</a></li>
-                        <li><a href="#">Januar 2014</a></li>
-                        <li><a href="#">Dezember 2013</a></li>
-                        <li><a href="#">November 2013</a></li>
-                        <li><a href="#">Oktober 2013</a></li>
-                        <li><a href="#">September 2013</a></li>
-                        <li><a href="#">August 2013</a></li>
-                        <li><a href="#">Juli 2013</a></li>
-                        <li><a href="#">Juni 2013</a></li>
-                        <li><a href="#">Mai 2013</a></li>
-                        <li><a href="#">April 2013</a></li>
-                    </ol>
-                </div>
+
+                {% endblock %}
 
             </div><!-- /.blog-sidebar -->
 

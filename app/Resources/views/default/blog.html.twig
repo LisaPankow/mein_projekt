@@ -1,44 +1,34 @@
 {% extends 'base.html.twig' %}
 
+{% block header %}
+    <div class="blog-header">
+        <h1 class="blog-title">{{month ~" "~ year}}</h1>
+    </div>
+{% endblock %}
+
 {% block body %}
-
     {% for eintrag in eintr %}
-
         <div class="blog-post">
-            <h2 class="blog-post-title">{{ eintrag.ueberschrift }}</h2>
+            <h3 class="blog-post-title">{{ eintrag.ueberschrift }}</h3>
+            <p>{{ eintrag.text }}</p>
+            <p>{{"Kategorie: " ~ eintrag.kategorie }}</p> 
             <p class="blog-post-meta">
-                {{ eintrag.datum|date('F j, Y g:i') }}
+                {{ "Erstellungsdatum: " ~eintrag.datum|date('F j, Y g:i') }}
             </p>
-            
-            <p>{{ eintrag.kategorie }}
-
-            </p> 
-            
             {#{% if eintrag.kategorie is not empty %}
                 <p class="blog-post-meta">
                     {{ eintrag.kategorie }}
                 </p>
             {% endif %}#}
-
-            <p>{{ eintrag.text }}
-
-            </p>       
             <a class="btn" href="{{path('bearbeiten',{'id':eintrag.id})}}">bearbeiten</a>   
             <a class="btn" href="{{path('loeschen',{'id':eintrag.id})}}">löschen</a>                           
-
             </br></br>
         </p>
     </div>
     <!-- /.blog-post -->
-
 {% endfor %}
-
-
-
 <div class="blog-post">
-
     {{ include('./spruch.html.twig') }}
-
 </div>
 <!-- /.blog-post -->
 
@@ -50,6 +40,25 @@
     </ul>
 </nav>
 
+{% endblock %}
+{% block sidebar %}
+    <div class="sidebar-module sidebar-module-inset">
+        <h4>Gedanke des Tages</h4>
+        <p>Nach einem Sinnspruch-Generator suchen</p>
+    </div>
 
+    <div class="sidebar-module">
+        <h4>Zeige Einträge</h4>
+        <ol class="list-unstyled">
+            {% for i in 1..12 %}
+                {% set monat = monate[i] %}
+                <li><a href="{{path('blog', {'year': year, 'month':monat})}}">
+                {{monat ~" "~ year}}
+                </a></li>
+            {% endfor %}
+          <li><a href="blog">Alle</a></li>
+
+        </ol>
+    </div>
 
 {% endblock %}
